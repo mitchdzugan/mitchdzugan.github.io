@@ -1,0 +1,137 @@
+---
+layout: default
+---
+
+<style type="text/css" media="screen">
+  .credits {
+    display: none;
+  }
+
+  h2 {
+    margin-bottom: 0;
+    line-height: 1rem;
+  }
+
+  .w {
+    padding: 0 2rem;
+  }
+
+  a object,
+  a img {
+    display: inline;
+    position: relative;
+    top: 8px;
+    height: 20px;
+    width: 20px;
+    margin-right: 8px;
+  }
+
+  a:hover object,
+  a:hover img {
+    filter: drop-shadow(0 0 0.0625rem var(--headings));
+  }
+
+  .icon-links {
+    margin-left: 10px;
+  }
+</style>
+
+<div id="root" class="container"> </div>
+
+<script>
+  const onReady = (fn) => {
+    if (document.readyState === "complete" || document.readyState === "interactive") {
+      setTimeout(fn, 1);
+    } else {
+      document.addEventListener("DOMContentLoaded", fn);
+    }
+  }
+
+  const sportsData = {
+    links: {
+      nba: (Y, M, D) => `https://www.espn.com/nba/scoreboard/_/date/${Y}${M}${D}`,
+      wnba: (Y, M, D) => `https://www.espn.com/wnba/scoreboard/_/date/${Y}${M}${D}`
+    },
+    update: () => {},
+  };
+  const sections = [
+    { title: 'sports', type: 'sports' },
+    { title: 'social', type: 'linkIcons', links: [
+      [
+        "https://www.youtube.com/",
+        "svg",
+        "https://cdn.worldvectorlogo.com/logos/youtube-icon-5.svg"
+      ],
+      [
+        "https://www.facebook.com/",
+        "svg",
+        "https://cdn.worldvectorlogo.com/logos/facebook-3-2.svg"
+      ],
+      [
+        "https://twitter.com/",
+        "svg",
+        "https://cdn.worldvectorlogo.com/logos/twitter-6.svg"
+      ],
+      [
+        "https://www.reddit.com/",
+        "svg",
+        "https://cdn.worldvectorlogo.com/logos/reddit-4.svg"
+      ],
+    ] },
+    { title: 'dev', type: 'linkIcons', links: [] },
+    { title: 'fun', type: 'linkIcons', links: [
+      [
+        "https://www.nytimes.com/games/connections",
+        "svg",
+        "https://www.nytimes.com/games-assets/v2/assets/icons/connections.svg"
+      ],
+      [
+        "https://www.cinenerdle2.app/",
+        "img",
+        "https://www.cinenerdle2.app/icon.png"
+      ],
+    ] },
+  ];
+  const renderType = {
+    linkIcons: ({ title, links }) => {
+      const h2 = document.createElement("h2");
+      h2.appendChild(document.createTextNode(title));
+      const iconLinks = document.createElement("div");
+      iconLinks.setAttribute("class", "icon-links");
+      for (const [href, imgType, src] of links) {
+        const a = document.createElement("a");
+        a.setAttribute("href", href);
+        if (imgType === "svg") {
+          const svg = document.createElement("object");
+          svg.setAttribute("data", src);
+          svg.setAttribute("type", "image/svg+xml");
+          a.appendChild(svg);
+        }
+        if (imgType === "img") {
+          const img = document.createElement("img");
+          img.setAttribute("src", src);
+          a.appendChild(img);
+        }
+        iconLinks.appendChild(a);
+      }
+      return [h2, iconLinks];
+    },
+    sports: ({ title }) => {
+      const h2 = document.createElement("h2");
+      h2.appendChild(document.createTextNode(title));
+      return [h2];
+    },
+  };
+  const render = () => {
+    const root = document.getElementById('root');
+    const children = [];
+    for (const section of sections) {
+      for (const el of renderType[section.type](section)) {
+        children.push(el);
+      }
+    }
+    root.replaceChildren(...children);
+  };
+
+  onReady(render);
+</script>
